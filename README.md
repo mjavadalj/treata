@@ -34,7 +34,7 @@
 
         "user": {
 
-            "phoneNumber": "9379387278",
+            "phoneNumber": "9********",
 
             "status": "notVerfied",
 
@@ -71,7 +71,7 @@
 
             "password": "$2a$10$HN1Xz9f3GJDG4hHKFxvvC.ya2IUReFGfR4z7iE3WdxismkIq56ISy",
 
-            "phoneNumber": "9379387278",
+            "phoneNumber": "9********",
 
             "status": "notVerfied",
 
@@ -115,7 +115,7 @@
 
             "password": "$2a$10$HN1Xz9f3GJDG4hHKFxvvC.ya2IUReFGfR4z7iE3WdxismkIq56ISy",
 
-            "phoneNumber": "9379387278",
+            "phoneNumber": "9*******",
 
             "status": "verfied",
 
