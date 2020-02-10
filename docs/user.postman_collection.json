@@ -1,0 +1,162 @@
+{
+	"info": {
+		"_postman_id": "5fd50b63-cbf3-4aac-b0a5-4853d57e9146",
+		"name": "user",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "get user (from Session)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/api/user/getuser",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"user",
+						"getuser"
+					]
+				},
+				"description": "اطلاعات یوزر لوگین کرده را برمیگرداند"
+			},
+			"response": []
+		},
+		{
+			"name": "signup (normal user)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\":\"\",\n\t\"phoneNumber\":\"\",\n\t\"password\":\"\",\n\t\"confirmPassword\":\"\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/user/signup",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"user",
+						"signup"
+					]
+				},
+				"description": "حداقل یکی از مقادیر ایمیل یا شماره موبایل ضروری است. پسورد هم باید حداقل یک عدد داشته باشد\n\nفرمت شماره موبایل\nphoneNumber : 093....."
+			},
+			"response": []
+		},
+		{
+			"name": "confirms ignup",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"confirmationCode\":\"\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/user/confirmsignup",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"user",
+						"confirmsignup"
+					]
+				},
+				"description": "کاربری که ثبت نام کرده تایید میشود.اگر بعد از ثبت نام مدت زیادی گدشته باشد نیاز به لوگین دارد تا اکانت خود را تایید کند"
+			},
+			"response": []
+		},
+		{
+			"name": "log out",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/api/user/logout",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"user",
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\":\"\",\n\t\"password\":\"\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/user/login",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"user",
+						"login"
+					]
+				},
+				"description": "باید یا از ایمیل استفاده شود یا از شماره موبایل\nemail\nphoneNumber: 093....."
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
