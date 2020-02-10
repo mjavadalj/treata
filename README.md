@@ -34,13 +34,13 @@
 
         "user": {
 
-        "phoneNumber": "9379387278",
+            "phoneNumber": "9379387278",
 
-        "status": "notVerfied",
+            "status": "notVerfied",
 
-        "role": "normalUser"
-    }
-}
+            "role": "normalUser"
+            }
+        }
 ---
 
 #### Confirm SignUp
@@ -151,7 +151,7 @@
     > Session
 * response body:
 
-    {
+        {
 
         "user": {
 
