@@ -1,17 +1,17 @@
 'use strict';
 const nodemailer = require('nodemailer');
-require('dotenv');
 
+const config = require('config');
 const Kavenegar = require('kavenegar');
 
 module.exports.emailVerification = async (email, confirmationCode) => {
 
     let transporter = nodemailer.createTransport({
-        service: process.env.MAILSERVICE,
+        service: config.get('app.mail.mailService'),
         secure: false,
         auth: {
-            user: process.env.MAIL,
-            pass: process.env.MAILPASSWORD
+            user: config.get('app.mail.mail'),
+            pass: config.get('app.mail.mailPassword')
         },
         tls: {
             rejectUnauthorized: false
@@ -20,7 +20,7 @@ module.exports.emailVerification = async (email, confirmationCode) => {
     // TODO: fix this
     let info = await transporter
         .sendMail({
-            from: process.env.MAIL,
+            from: config.get('app.mail.mail'),
             to: email,
             subject: 'کد تایید ثبت نام در تریتا',
             text: ` از کد زیر برای تایید ثبت نام خود در تریتا استفاده کنید:\n
@@ -35,14 +35,14 @@ module.exports.emailVerification = async (email, confirmationCode) => {
         });
 };
 module.exports.phoneVerfication = (phoneNumber, confirmationCode) => {
-    const SmsApi = Kavenegar.KavenegarApi({ apikey: process.env.SMS_API_KEY });
+    const SmsApi = Kavenegar.KavenegarApi({ apikey: config.get('app.mail.sms_api_key') });
     SmsApi.Send(
         {
             message: `
             Treata
             از کد زیر برای تایید ثبت نام خود در تریتا استفاده کنید:\n
             ${confirmationCode}
-        `, sender: process.env.SMSSENDER, receptor: phoneNumber
+        `, sender: config.get('app.mail.sms_sender'), receptor: phoneNumber
         },
         function (response, status) {
             console.log(response);

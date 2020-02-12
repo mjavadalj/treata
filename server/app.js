@@ -10,10 +10,6 @@ const db = mongoose.connection;
 const mongoStore = require('connect-mongo')(session);
 const config = require('config');
 
-require('dotenv').config({
-    path: './server/.env'
-})
-
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));

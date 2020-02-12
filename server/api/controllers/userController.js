@@ -2,7 +2,6 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 const validator = require('../middlewares/validator');
 const mongoose = require('mongoose');
-require('dotenv');
 require('../middlewares/passportSession');
 const mailer = require('../middlewares/mailer');
 const randomstring = require("randomstring");

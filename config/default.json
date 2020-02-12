@@ -6,9 +6,11 @@
             "baseUrl": "http://localhost:3000"
         },
         "mail": {
-            "mail": "",
-            "password": "",
-            "servise": ""
+            "mail": "treataapp1",
+            "mailPassword": "TreaT@app#1",
+            "mailService": "gmail",
+            "sms_api_key": "325A44376342755954496F5665307470784244493956456F4B5A3971675364643475436C4A777931556E453D",
+            "sms_sender": "1000596446"
         }
     },
     "noSql": {
