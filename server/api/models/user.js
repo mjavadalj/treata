@@ -22,6 +22,9 @@ const user = new Schema({
         type: String,
         required: [true, 'password is required']
     },
+    disposablePassword: {
+        type: String,
+    },
     status: {
         type: String,
         required: true,

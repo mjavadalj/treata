@@ -16,7 +16,17 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 mongoose.set('useUnifiedTopology', true);
 mongoose.set('useCreateIndex', true);
-mongoose.connect('mongodb://localhost:27017/treata', { useNewUrlParser: true })
+// mongoose.connect('mongodb://localhost:27017/treata', { useNewUrlParser: true })
+//     .then(() => {
+//         console.log('database connected');
+//     })
+//     .catch(databaseConnectionError => {
+//         console.log('Unable to connect to the database :' + databaseConnectionError);
+//         return `Unable to connect to the database  : ${databaseConnectionError}`
+
+//     });
+
+mongoose.connect('mongodb+srv://treata:treata@cluster0-n9ikv.mongodb.net/test?retryWrites=true&w=majority', { useNewUrlParser: true })
     .then(() => {
         console.log('database connected');
     })
