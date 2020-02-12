@@ -40,7 +40,7 @@ mongoose.connect('mongodb+srv://treata:treata@cluster0-n9ikv.mongodb.net/test?re
 
 app.use(
     session({
-        secret: process.env.SESSION_SECRET,
+        secret: 'ioashdshd78&%@wsqgsARSASGHYW672q&@^#%Q#*@DHW*',
         resave: false,
         saveUninitialized: false,
         store: new mongoStore({
