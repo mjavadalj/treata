@@ -1,0 +1,20 @@
+{
+    "app": {
+        "webServer": {
+            "port": 3000,
+            "session_secret": "ersfvead#@WD#R$R%##xlxd5&DG@#$#@%$#%$#@#$#@$#@",
+            "baseUrl": "http://localhost:3000"
+        },
+        "mail": {
+            "mail": "",
+            "password": "",
+            "servise": ""
+        }
+    },
+    "noSql": {
+        "name": "",
+        "nationalcode": "",
+        "password": "",
+        "host": "localhost"
+    }
+}

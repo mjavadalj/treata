@@ -8,6 +8,7 @@ const passport = require('passport');
 const mongoose = require('mongoose');
 const db = mongoose.connection;
 const mongoStore = require('connect-mongo')(session);
+const config = require('config');
 
 require('dotenv').config({
     path: './server/.env'
@@ -40,7 +41,7 @@ mongoose.connect('mongodb+srv://treata:treata@cluster0-n9ikv.mongodb.net/test?re
 
 app.use(
     session({
-        secret: 'ioashdshd78&%@wsqgsARSASGHYW672q&@^#%Q#*@DHW*',
+        secret: config.get('app.webServer.session_secret'),
         resave: false,
         saveUninitialized: false,
         store: new mongoStore({
