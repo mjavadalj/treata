@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const router = require('./router');
+const cors = require('cors')
 const session = require('express-session');
 const passport = require('passport');
 const mongoose = require('mongoose');
@@ -12,6 +13,7 @@ require('dotenv').config({
     path: './server/.env'
 })
 
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 mongoose.set('useUnifiedTopology', true);
