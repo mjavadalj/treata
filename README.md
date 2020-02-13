@@ -127,6 +127,45 @@
 
         }
 ---
+#### Mobile Login with sms
+#### مرحله اول
+* mode : post
+* Route : /api/user/disposablePassword
+* request body :
+
+        { 
+	    "phoneNumber":""
+
+        }
+
+* response body :
+
+        {
+            "message": "sms sent"
+        }
+
+
+
+
+        
+#### مرحله دوم
+* mode : post
+* Route : /api/user/loginwithsms
+* request body :
+
+        { 
+	        "phoneNumber":""و
+            "disposablePassword":""
+
+        }
+
+* response body :
+
+        {
+            message: 'signup successful - sms sent',
+            user: {}
+        }
+---
 
 #### Log Out
 * mode : get
