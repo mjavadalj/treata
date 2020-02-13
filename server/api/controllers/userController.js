@@ -8,6 +8,13 @@ const randomstring = require("randomstring");
 
 module.exports.signup = (req, res, next) => {
     var confirmationCode = randomstring.generate(5);
+
+    var sendingText = `
+    Treata
+    از کد زیر برای تایید ثبت نام خود در تریتا استفاده کنید:\n
+    ${confirmationCode}
+`;
+    var subject = `کد تایید ثبت نام در treata`
     validator.signupValidator(req)
 
         .then(requestBody => {
@@ -33,18 +40,13 @@ module.exports.signup = (req, res, next) => {
                                     .then((insertResult) => {
 
                                         if (requestBody.phoneNumber) {
-                                            mailer.phoneVerfication(requestBody.phoneNumber, confirmationCode)
+                                            mailer.phoneVerfication(requestBody.phoneNumber, sendingText)
                                             req.login(insertResult, (error) => {
                                                 if (error) throw error;
                                                 console.log("logged in after signup")
                                                 return res.status(200).json({
                                                     message: 'signup successful - sms sent',
-                                                    user: {
-                                                        email: insertResult.email,
-                                                        phoneNumber: insertResult.phoneNumber,
-                                                        status: insertResult.status,
-                                                        role: insertResult.role
-                                                    }
+                                                    user: insertResult
                                                 })
                                             })
 
@@ -52,7 +54,7 @@ module.exports.signup = (req, res, next) => {
                                         }
                                         else if (requestBody.email) {
 
-                                            mailer.emailVerification(requestBody.email, confirmationCode).then(() => {
+                                            mailer.emailVerification(requestBody.email, subject, sendingText).then(() => {
                                                 req.login(insertResult, (error) => {
                                                     if (error) {
                                                         console.log(error)
@@ -61,12 +63,7 @@ module.exports.signup = (req, res, next) => {
                                                     console.log("logged in after signup")
                                                     return res.status(200).json({
                                                         message: 'signup successful - email sent',
-                                                        user: {
-                                                            email: insertResult.email,
-                                                            phoneNumber: insertResult.phoneNumber,
-                                                            status: insertResult.status,
-                                                            role: insertResult.role
-                                                        }
+                                                        user: insertResult
                                                     })
                                                 })
 
@@ -170,6 +167,81 @@ module.exports.login = (req, res) => {
         });
 
 }
+
+module.exports.disposablePassword = (req, res) => {
+
+    var disposablePassword = randomstring.generate(5);
+
+    var sendingText = `
+    Treata
+    رمز عبو شما:\n
+    ${disposablePassword}
+`
+    User.find({ phoneNumber: req.body.phoneNumber })
+        .then(user => {
+            if (user.length < 1) {
+                return res.status(400).json({
+                    message: "user don't exist"
+                });
+            }
+            else {
+                user[0].disposablePassword = disposablePassword;
+                user[0].save().then((user) => {
+
+                    mailer.phoneVerfication(requestBody.phoneNumber, sendingText)
+
+                }).catch(err => {
+                    return res.status(500).json({
+                        message: "database error ",
+                        err
+                    })
+
+                });
+
+
+
+            }
+        })
+        .catch(findUserFailed => {
+            return res.status(500).json({
+                message: "finding user failed - internal error",
+                error: findUserFailed
+            })
+        });
+
+}
+
+
+module.exports.disposablePassword = (req, res) => {
+
+    User.find({ phoneNumber: req.body.phoneNumber }).then(users => {
+
+        if (user.length < 1) {
+            return res.status(400).json({
+                message: "user doesn't exist"
+            })
+        }
+        else {
+            if (user[0].disposablePassword == req.body.disposablePassword) {
+
+                req.login(user[0], (error) => {
+                    if (error) throw error;
+                    console.log("logged in after signup")
+                    return res.status(200).json({
+                        message: 'signup successful - sms sent',
+                        user: user[0]
+                    })
+                })
+            }
+            else {
+                return res.status(400).json({ message: "password incorrect" })
+            }
+        }
+
+    }).catch(err => { return res.status(500).json({ message: "finding user failed - internal", err }) })
+
+}
+
 module.exports.logout = (req, res) => {
     req.session.destroy(function (err) {
         return res.status(200).json({
@@ -182,3 +254,4 @@ module.exports.getUser = (req, res) => {
         user: req.user
     })
 };
+

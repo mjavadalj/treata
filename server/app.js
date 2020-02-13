@@ -25,6 +25,7 @@ mongoose.set('useCreateIndex', true);
 
 //     });
 
+app.use("/files", express.static(__dirname + '/../files'));
 mongoose.connect('mongodb+srv://treata:treata@cluster0-n9ikv.mongodb.net/test?retryWrites=true&w=majority', { useNewUrlParser: true })
     .then(() => {
         console.log('database connected');
@@ -53,7 +54,6 @@ app.use(passport.session());
 db.once('open', function () {
 
     app.use('/api', router);
-
 
 });
 

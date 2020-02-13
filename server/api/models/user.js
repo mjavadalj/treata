@@ -39,6 +39,8 @@ const user = new Schema({
         enum: ['normalUser', 'admin', 'sender', 'contentCreator'],
     },
     cart: { type: objectId, ref: 'Cart' },
+    likedNews: [{ type: objectId, ref: "News" }],
+    savedNews: [{ type: objectId, ref: "News" }]
 
 });
 
