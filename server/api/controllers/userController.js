@@ -189,6 +189,9 @@ module.exports.disposablePassword = (req, res) => {
                 user[0].save().then((user) => {
 
                     mailer.phoneVerfication(requestBody.phoneNumber, sendingText)
+                    return res.status(200).json({
+                        message: "sms sent !"
+                    })
 
                 }).catch(err => {
                     return res.status(500).json({
