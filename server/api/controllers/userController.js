@@ -212,7 +212,7 @@ module.exports.disposablePassword = (req, res) => {
 }
 
 
-module.exports.disposablePassword = (req, res) => {
+module.exports.loginWithSms = (req, res) => {
 
     User.find({ phoneNumber: req.body.phoneNumber }).then(users => {
 
