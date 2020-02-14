@@ -5,6 +5,8 @@ const mongoose = require('mongoose');
 require('../middlewares/passportSession');
 const mailer = require('../middlewares/mailer');
 const randomstring = require("randomstring");
+const News = require('../models/news');
+
 
 module.exports.signup = (req, res, next) => {
     var confirmationCode = randomstring.generate(5);
@@ -35,7 +37,7 @@ module.exports.signup = (req, res, next) => {
                                     phoneNumber: requestBody.phoneNumber,
                                     status: 'notVerfied',
                                     confirmationCode,
-                                    role: 'normalUser'
+                                    role: requestBody.role
                                 }).save()
                                     .then((insertResult) => {
 
@@ -253,8 +255,196 @@ module.exports.logout = (req, res) => {
     })
 }
 module.exports.getUser = (req, res) => {
-    return res.status(200).json({
-        user: req.user
+    User.find({ _id: req.user._id }).then(users => {
+        if (users.length < 1) {
+            return res.satus(400).json({
+                message: "user does not exist"
+            })
+        } else {
+            return res.status(200).json({
+                message: "finding user successful",
+                user: users[0]
+            })
+        }
+    }).catch(err => {
+        return res.status(500).json({ message: "cannot found user", err })
     })
 };
+
+module.exports.likeNews = (req, res) => {
+    News.find({ title: req.body.title }).then(news => {
+        if (news.length < 1) {
+            return res.status(400).json({
+                message: "news not found"
+            })
+        } else {
+            news[0].likes = news[0].likes + 1;
+            news[0].save().then(newNews => {
+
+                User.find({ _id: req.user._id }).then(users => {
+
+                    if (!users[0].likedNews.includes(`${newNews._id}`)) {
+
+                        users[0].likedNews.push(newNews._id);
+                        users[0].save().then(user => {
+                            return res.status(200).json({
+                                message: "news liked",
+                                newNews
+                            })
+                        }).catch(err => {
+                            return res.status(500).json({
+                                message: "updatin user failed - internal",
+                                err
+                            })
+                        })
+                    } else {
+                        return res.status(400).json({
+                            message: "you already like this news"
+                        })
+                    }
+                }).catch(err => {
+                    return res.status(400).json({
+                        message: "finding this user failed ",
+                        err
+                    })
+                })
+            }).catch(err => {
+                return res.status(500).json({
+                    message: "updating news failed",
+                    err
+                })
+            })
+        }
+    }).catch(err => {
+        return res.status(500).json({
+            message: "finding the news failed - internal",
+            err
+        })
+    })
+}
+module.exports.unlikeNews = (req, res) => {
+
+    User.find({ _id: req.user._id }).then(users => {
+
+        News.find({ title: req.body.title }).then(news => {
+            if (users[0].likedNews.includes(`${news[0]._id}`)) {
+                users[0].likedNews.splice(users[0].likedNews.indexOf(`${news[0]._id}`), 1);
+                users[0].save().then(() => {
+
+                    news[0].likes = news[0].likes - 1;
+                    news[0].save().then(newNews => {
+                        return res.status(200.).json({
+                            message: "news unliked",
+                            news: newNews
+                        })
+                    }).catch(err => {
+                        return res.status(500).json({
+                            err,
+                            message: "saving info failed"
+                        })
+                    })
+                }).catch()
+            } else {
+                return res.status(400).json({
+                    message: "you never liked this news"
+                })
+
+            }
+        }).catch(err => {
+            return res.status(500).json({
+                err,
+                message: "finding news failed"
+            })
+        })
+    }).catch(err => {
+        return res.status(500).json({
+            err,
+            message: "finding user failed"
+        })
+    })
+}
+
+
+
+module.exports.saveNews = (req, res) => {
+    User.find({ _id: req.user._id }).then(users => {
+        News.find({ title: req.body.title }).then(news => {
+            if (!users[0].savedNews.includes(`${news[0]._id}`)) {
+
+
+                users[0].savedNews = news[0]._id;
+                users[0].save().then(user => {
+                    return res.status(200).json({
+                        message: "news saved successfully",
+                        user
+                    })
+                }).catch(err => {
+                    return res.status(500).json({
+                        message: "saving info failed",
+                        err
+                    })
+                })
+            }
+            else {
+                return res.status(400).json({
+                    message: "you already saved this news"
+                })
+            }
+
+
+        }).catch(err => {
+            return res.status(500).json({
+                message: "finding news failed",
+                err
+            })
+        })
+    }).catch(err => {
+        return res.status(500).json({
+            message: "finding user failed",
+            err
+        })
+    })
+}
+
+
+
+module.exports.unSaveNews = (req, res) => {
+    User.find({ _id: req.user._id }).then(users => {
+        News.find({ title: req.body.title }).then(news => {
+            if (users[0].savedNews.includes(`${news[0]._id}`)) {
+                users[0].savedNews.splice(users[0].savedNews.indexOf(`${news[0]._id}`), 1);
+
+                users[0].savedNews = news[0]._id;
+                users[0].save().then(user => {
+                    return res.status(200).json({
+                        message: "news saved successfully",
+                        user
+                    })
+                }).catch(err => {
+                    return res.status(500).json({
+                        message: "saving info failed",
+                        err
+                    })
+                })
+            }
+            else {
+                return res.status(400).json({
+                    message: "you never saved this news"
+                })
+            }
+
+
+        }).catch(err => {
+            return res.status(500).json({
+                message: "finding news failed",
+                err
+            })
+        })
+    }).catch(err => {
+        return res.status(500).json({
+            message: "finding user failed",
+            err
+        })
+    })
+}
 

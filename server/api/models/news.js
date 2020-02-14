@@ -10,15 +10,17 @@ const news = new Schema({
     },
     title: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     textFile: {
         type: String,
         required: true
     },
-    pictureFile: String,
+    pictureFile: [String],
     likes: {
-        type: Number
+        type: Number,
+        default: 0
     }
 })
 module.exports = mongoose.model('News', news)

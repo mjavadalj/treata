@@ -14,14 +14,10 @@ router.get('/logout', logger.userLogger, userController.logout);
 
 router.get('/getuser', logger.userLogger, authentication.authenticated, userController.getUser);
 
+router.post('/likenews', logger.userLogger, authentication.authenticated, authentication.verfied, userController.likeNews);
+router.post('/unlikenews', logger.userLogger, authentication.authenticated, authentication.verfied, userController.unlikeNews);
+router.post('/savenews', logger.userLogger, authentication.authenticated, authentication.verfied, userController.saveNews);
+router.post('/unsavenews', logger.userLogger, authentication.authenticated, authentication.verfied, userController.unSaveNews);
 
-// * just for test
-router.get('/get', (req, res) => {
-
-    console.log(req.user);
-    console.log("==========================");
-    console.log(req.isAuthenticated());
-    return res.status(200);
-});
 
 module.exports = router;

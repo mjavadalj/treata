@@ -8,7 +8,21 @@ const userLog = bunyan.createLogger({
     name: "User Logger",
     streams: [{
         type: 'rotating-file',
-        path: path.join(__dirname + "/../../logs.log"),
+        path: path.join(__dirname + "/../../logs/userLogs.log"),
+        period: '1d',
+    },
+    {
+        level: 'info',
+        stream: process.stdout
+    }]
+});
+
+const newsLog = bunyan.createLogger({
+
+    name: "news Logger",
+    streams: [{
+        type: 'rotating-file',
+        path: path.join(__dirname + "/../../logs/newsLogs.log"),
         period: '1d',
     },
     {
@@ -19,5 +33,9 @@ const userLog = bunyan.createLogger({
 
 module.exports.userLogger = (req, res, next) => {
     userLog.info({ url: req.originalUrl, requestBody: req.body });
+    next();
+};
+module.exports.newsLogger = (req, res, next) => {
+    newsLog.info({ url: req.originalUrl, requestBody: req.body });
     next();
 };
