@@ -1,4 +1,6 @@
 node_modules/
 server/.env
-server/logs
-files/
+server/logs/*.log
+files/image/*.jpg
+files/image/*.jpeg
+files/txt/*.txt
