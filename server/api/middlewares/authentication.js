@@ -34,6 +34,11 @@ module.exports.isContentCreator = (req, res, next) => {
             return next();
 
         }
+        else {
+            return res.status(400).json({
+                message: "you are not allowed - please verify youre account"
+            })
+        }
     }
 
     else {

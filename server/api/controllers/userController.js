@@ -248,7 +248,7 @@ module.exports.loginWithSms = (req, res) => {
                     if (error) throw error;
                     console.log("logged in after signup")
                     return res.status(200).json({
-                        message: 'signup successful - sms sent',
+                        message: 'login successful',
                         user: users[0]
                     })
                 })

@@ -10,5 +10,5 @@ router.post('/removenews', logger.newsLogger, authentication.authenticated, auth
 
 router.post('/getnews', logger.newsLogger, newsController.getNews);
 
-router.post('/searchnews', logger.userLogger, authentication.authenticated, authentication.verfied, newsController.searchNews);
+router.post('/searchnews', logger.userLogger, newsController.searchNews);  /*authentication.authenticated, authentication.verfied, */
 module.exports = router;
