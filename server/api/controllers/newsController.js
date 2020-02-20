@@ -124,7 +124,7 @@ module.exports.uploadPic = (req, res) => {
     });
     new Pictures({
         _id: mongoose.Types.ObjectId(),
-        newsTitle: req.body.title,
+        // newsTitle: req.body.title,
         pictureFile: picUrls
     }).save().then(pictures => {
         return res.status(200).json({
