@@ -19,8 +19,7 @@ const user = new Schema({
         type: String
     }],
     password: {
-        type: String,
-        required: [true, 'password is required']
+        type: String
     },
     disposablePassword: {
         type: String,
@@ -29,6 +28,7 @@ const user = new Schema({
         type: String,
         required: true,
         enum: ['notVerfied', 'verfied'],
+        default: 'notVerfied'
     },
     confirmationCode: {
         type: String,
@@ -37,6 +37,7 @@ const user = new Schema({
         type: String,
         required: true,
         enum: ['normalUser', 'admin', 'sender', 'contentCreator'],
+        default: 'normalUser'
     },
     cart: { type: objectId, ref: 'Cart' },
     likedNews: [{ type: objectId, ref: "News" }],

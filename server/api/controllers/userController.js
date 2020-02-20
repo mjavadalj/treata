@@ -170,71 +170,86 @@ module.exports.login = (req, res) => {
 
 }
 
-module.exports.disposablePassword = (req, res) => {
+// module.exports.disposablePassword = (req, res) => {
 
-    var disposablePassword = randomstring.generate(5);
+//     var disposablePassword = randomstring.generate(5);
 
-    var sendingText = `
-    Treata
-    رمز عبو شما:\n
-    ${disposablePassword}
-`
-    User.find({ phoneNumber: req.body.phoneNumber })
-        .then(user => {
-            if (user.length < 1) {
-                return res.status(400).json({
-                    message: "user don't exist"
-                });
-            }
-            else {
-                user[0].disposablePassword = disposablePassword;
-                user[0].save().then((user) => {
+//     var sendingText = `
+//     Treata
+//     رمز عبو شما:\n
+//     ${disposablePassword}
+// `
+//     User.find({ phoneNumber: req.body.phoneNumber })
+//         .then(user => {
+//             if (user.length < 1) {
+//                 new User({
+//                     _id: mongoose.Types.ObjectId(),
+//                     phoneNumber: requestBody.phoneNumber,
+//                     status: 'notVerfied'
+//                 }).save().then(user => {
+//                     mailer.phoneVerfication(requestBody.phoneNumber, sendingText)
+//                     return res.status(200).json({
+//                         message: "confirmation code sent",
+//                         user
+//                     })
+//                 })
+//                     .catch(err => {
+//                         return res.status(500).json({
+//                             message: "sign up failed",
+//                             err
+//                         })
+//                     })
 
-                    mailer.phoneVerfication(requestBody.phoneNumber, sendingText)
-                    return res.status(200).json({
-                        message: "sms sent !"
-                    })
+//             }
+//             else {
+//                 user[0].disposablePassword = disposablePassword;
+//                 user[0].save().then((user) => {
 
-                }).catch(err => {
-                    return res.status(500).json({
-                        message: "database error ",
-                        err
-                    })
+//                     mailer.phoneVerfication(requestBody.phoneNumber, sendingText)
+//                     return res.status(200).json({
+//                         message: "sms sent !"
+//                     })
 
-                });
+//                 }).catch(err => {
+//                     return res.status(500).json({
+//                         message: "database error ",
+//                         err
+//                     })
+
+//                 });
 
 
 
-            }
-        })
-        .catch(findUserFailed => {
-            return res.status(500).json({
-                message: "finding user failed - internal error",
-                error: findUserFailed
-            })
-        });
+//             }
+//         })
+//         .catch(findUserFailed => {
+//             return res.status(500).json({
+//                 message: "finding user failed - internal error",
+//                 error: findUserFailed
+//             })
+//         });
 
-}
+// }
 
 
 module.exports.loginWithSms = (req, res) => {
 
     User.find({ phoneNumber: req.body.phoneNumber }).then(users => {
 
-        if (user.length < 1) {
+        if (users.length < 1) {
             return res.status(400).json({
                 message: "user doesn't exist"
             })
         }
         else {
-            if (user[0].disposablePassword == req.body.disposablePassword) {
+            if (users[0].disposablePassword == req.body.disposablePassword) {
 
-                req.login(user[0], (error) => {
+                req.login(users[0], (error) => {
                     if (error) throw error;
                     console.log("logged in after signup")
                     return res.status(200).json({
                         message: 'signup successful - sms sent',
-                        user: user[0]
+                        user: users[0]
                     })
                 })
             }
@@ -446,5 +461,48 @@ module.exports.unSaveNews = (req, res) => {
             err
         })
     })
+}
+
+
+
+module.exports.signupWithSms = (req, res) => {
+
+    var disposablePassword = randomstring.generate(5);
+
+    var sendingText = `
+    Treata
+    رمز عبو شما:\n
+    ${disposablePassword}
+`
+    new User({
+        _id: mongoose.Types.ObjectId(),
+        phoneNumber: req.body.phoneNumber,
+        status: 'notVerfied'
+    }).save().then(userAdded => {
+        mailer.phoneVerfication(req.body.phoneNumber, sendingText)
+        userAdded.disposablePassword = disposablePassword;
+        userAdded.save().then(user => {
+
+            return res.status(200).json({
+                message: "confirmation code sent",
+                user
+            })
+
+        }).catch(err => {
+            return res.status(500).json({
+                message: "saving changed failed",
+                err
+            })
+        })
+
+
+
+    })
+        .catch(err => {
+            return res.status(500).json({
+                message: "sign up failed",
+                err
+            })
+        })
 }
 
