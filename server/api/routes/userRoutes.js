@@ -15,10 +15,10 @@ router.get('/logout', logger.userLogger, userController.logout);
 
 router.get('/getuser', logger.userLogger, authentication.authenticated, userController.getUser);
 
-router.post('/likenews', logger.userLogger, authentication.authenticated, authentication.verfied, userController.likeNews);
-router.post('/unlikenews', logger.userLogger, authentication.authenticated, authentication.verfied, userController.unlikeNews);
-router.post('/savenews', logger.userLogger, authentication.authenticated, authentication.verfied, userController.saveNews);
-router.post('/unsavenews', logger.userLogger, authentication.authenticated, authentication.verfied, userController.unSaveNews);
+router.post('/likenews', logger.userLogger, authentication.authenticated, userController.likeNews);//authentication.verfied,
+router.post('/unlikenews', logger.userLogger, authentication.authenticated, userController.unlikeNews);//authentication.verfied,
+router.post('/savenews', logger.userLogger, authentication.authenticated, userController.saveNews);//authentication.verfied,
+router.post('/unsavenews', logger.userLogger, authentication.authenticated, userController.unSaveNews);//authentication.verfied,
 
 
 module.exports = router;
