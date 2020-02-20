@@ -8,12 +8,10 @@ const user = new Schema({
         required: true
     },
     email: {
-        type: String,
-        unique: true
+        type: String
     },
     phoneNumber: {
-        type: String,
-        unique: true
+        type: String
     },
     address: [{
         type: String
