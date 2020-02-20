@@ -33,7 +33,7 @@ module.exports.addNews = (req, res) => {
         });
 }
 module.exports.removeNews = (req, res) => {
-    News.deleteOne({ title: req.body.title }).then(() => {
+    News.deleteOne({ $or: [{ title: req.body.title }, { _id: req.body.newsId }] }).then(() => {
         return res.status(200).json({
             message: "news deleted"
         })
@@ -47,7 +47,7 @@ module.exports.getNews = (req, res) => {
     fs.readFile(`${path.join(__dirname + `./../../../files/txt/${req.body.title}.txt`)}`, 'utf8', function (err, data) {
         if (err) throw err;
 
-        News.find({ title: req.body.title }).then((news) => {
+        News.find({ $or: [{ title: req.body.title }, { _id: req.body.newsId }] }).then((news) => {
 
             if (news.length < 1) {
                 return res.status(400).json({
