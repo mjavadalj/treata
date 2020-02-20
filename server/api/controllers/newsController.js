@@ -13,33 +13,33 @@ module.exports.addNews = (req, res) => {
     fs.writeFile(`${path.join(__dirname + `./../../../files/txt/${req.body.title}.txt`)}`,
         req.body.text, function (err) {
             if (err) throw err;
-            Pictures.find({ newsTitle: req.body.title }).then(findedPictures => {
-                // console.log(findedPictures[0].pictureFile)
-                new News({
-                    _id: mongoose.Types.ObjectId(),
-                    title: req.body.title,
-                    textFile: `${config.get('app.webServer.baseUrl')}/files/txt/${req.body.title}.txt`,
-                    // pictureFile: picUrls
-                    // pictureFile: req.body.picUrls
-                    pictures: findedPictures[0].pictureFile
-                }).save().then(news => {
-                    return res.status(200).json({
-                        message: "news added",
-                        news
-                    })
-                }).catch(err => {
-                    return res.status(500).json({
-                        message: "adding news failed - internal !?",
-                        err
-                    })
+            // Pictures.find({ newsTitle: req.body.title }).then(findedPictures => {
+            // console.log(findedPictures[0].pictureFile)
+            new News({
+                _id: mongoose.Types.ObjectId(),
+                title: req.body.title,
+                textFile: `${config.get('app.webServer.baseUrl')}/files/txt/${req.body.title}.txt`,
+                // pictureFile: picUrls
+                // pictureFile: req.body.picUrls
+                pictures: req.body.pictures
+            }).save().then(news => {
+                return res.status(200).json({
+                    message: "news added",
+                    news
                 })
-
             }).catch(err => {
                 return res.status(500).json({
-                    message: "finding pictures failed",
+                    message: "adding news failed - internal !?",
                     err
                 })
             })
+
+            // }).catch(err => {
+            //     return res.status(500).json({
+            //         message: "finding pictures failed",
+            //         err
+            //     })
+            // })
 
 
 
@@ -61,7 +61,7 @@ module.exports.getNews = (req, res) => {
     fs.readFile(`${path.join(__dirname + `./../../../files/txt/${req.body.title}.txt`)}`, 'utf8', function (err, data) {
         if (err) throw err;
 
-        News.find({ $or: [{ title: req.body.title }, { _id: req.body.newsId }] }).populate('Pictures').then((news) => {
+        News.find({ $or: [{ title: req.body.title }, { _id: req.body.newsId }] }).then((news) => {
 
             if (news.length < 1) {
                 return res.status(400).json({
