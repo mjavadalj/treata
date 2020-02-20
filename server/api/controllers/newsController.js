@@ -122,6 +122,11 @@ module.exports.uploadPic = (req, res) => {
     req.files.forEach(pic => {
         picUrls.push(`${config.get('app.webServer.baseUrl')}/files/image/${pic.filename}`)
     });
+    console.log("000000000000000000------------------");
+
+    console.log(req);
+
+    console.log("23333333333333333330000000000------------------");
     new Pictures({
         _id: mongoose.Types.ObjectId(),
         // newsTitle: req.body.title,
