@@ -1,4 +1,5 @@
 const News = require('../models/news');
+const Pictures = require('../models/pictures');
 const mongoose = require('mongoose');
 const config = require('config');
 var fs = require('fs');
@@ -7,29 +8,42 @@ var path = require('path');
 const findInFiles = require('find-in-files');
 
 module.exports.addNews = (req, res) => {
-    var picUrls = [];
-    req.files.forEach(pic => {
-        picUrls.push(`${config.get('app.webServer.baseUrl')}/files/image/${pic.filename}`)
-    });
     //* maybe make this a middleware !
+    var pictureArray;
     fs.writeFile(`${path.join(__dirname + `./../../../files/txt/${req.body.title}.txt`)}`,
         req.body.text, function (err) {
             if (err) throw err;
-            new News({
-                _id: mongoose.Types.ObjectId(),
-                title: req.body.title,
-                textFile: `${config.get('app.webServer.baseUrl')}/files/txt/${req.body.title}.txt`,
-                pictureFile: picUrls
-            }).save().then(news => {
-                return res.status(200).json({
-                    message: "news added",
-                    news
+            Pictures.find({ newsTitle: req.body.title }).then(findedPictures => {
+                // console.log(findedPictures[0].pictureFile)
+                new News({
+                    _id: mongoose.Types.ObjectId(),
+                    title: req.body.title,
+                    textFile: `${config.get('app.webServer.baseUrl')}/files/txt/${req.body.title}.txt`,
+                    // pictureFile: picUrls
+                    // pictureFile: req.body.picUrls
+                    pictures: findedPictures[0].pictureFile
+                }).save().then(news => {
+                    return res.status(200).json({
+                        message: "news added",
+                        news
+                    })
+                }).catch(err => {
+                    return res.status(500).json({
+                        message: "adding news failed - internal !?",
+                        err
+                    })
                 })
+
             }).catch(err => {
                 return res.status(500).json({
-                    message: "adding news failed - internal !?"
+                    message: "finding pictures failed",
+                    err
                 })
             })
+
+
+
+
         });
 }
 module.exports.removeNews = (req, res) => {
@@ -47,7 +61,7 @@ module.exports.getNews = (req, res) => {
     fs.readFile(`${path.join(__dirname + `./../../../files/txt/${req.body.title}.txt`)}`, 'utf8', function (err, data) {
         if (err) throw err;
 
-        News.find({ $or: [{ title: req.body.title }, { _id: req.body.newsId }] }).then((news) => {
+        News.find({ $or: [{ title: req.body.title }, { _id: req.body.newsId }] }).populate('Pictures').then((news) => {
 
             if (news.length < 1) {
                 return res.status(400).json({
@@ -101,4 +115,26 @@ module.exports.searchNews = (req, res) => {
                 err
             })
         })
+}
+
+module.exports.uploadPic = (req, res) => {
+    var picUrls = [];
+    req.files.forEach(pic => {
+        picUrls.push(`${config.get('app.webServer.baseUrl')}/files/image/${pic.filename}`)
+    });
+    new Pictures({
+        _id: mongoose.Types.ObjectId(),
+        newsTitle: req.body.title,
+        pictureFile: picUrls
+    }).save().then(pictures => {
+        return res.status(200).json({
+            message: "upload succesful",
+            pictures
+        })
+    }).catch(err => {
+        return res.status(500).json({
+            message: "saving failed",
+            err
+        })
+    })
 }

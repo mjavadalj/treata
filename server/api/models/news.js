@@ -14,10 +14,9 @@ const news = new Schema({
         unique: true
     },
     textFile: {
-        type: String,
-        required: true
+        type: String
     },
-    pictureFile: [String],
+    pictures: [String],
     likes: {
         type: Number,
         default: 0
