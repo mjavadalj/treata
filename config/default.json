@@ -3,7 +3,7 @@
         "webServer": {
             "port": 3000,
             "session_secret": "ersfvead#@WD#R$R%##xlxd5&DG@#$#@%$#%$#@#$#@$#@",
-            "baseUrl": "http://localhost:3000"
+            "baseUrl": "https://fierce-harbor-23552.herokuapp.com"
         },
         "mail": {
             "mail": "treataapp1",
