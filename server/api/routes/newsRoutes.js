@@ -4,10 +4,10 @@ const authentication = require('../middlewares/authentication');
 const upload = require('../middlewares/uploadMiddleware');
 const logger = require('../middlewares/logger');
 
-router.post('/addnews', logger.newsLogger, authentication.authenticated, authentication.isContentCreator, newsController.addNews);
+router.post('/addnews', logger.newsLogger, newsController.addNews);// authentication.authenticated, authentication.isContentCreator,
 
-router.post('/removenews', logger.newsLogger, authentication.authenticated, authentication.isContentCreator, newsController.removeNews);
-router.post('/uploadpics', logger.newsLogger, authentication.authenticated, authentication.isContentCreator, upload.array('photos', 3), newsController.uploadPic);
+router.post('/removenews', logger.newsLogger, newsController.removeNews);// authentication.authenticated, authentication.isContentCreator,
+router.post('/uploadpics', logger.newsLogger, upload.array('photos', 3), newsController.uploadPic);// authentication.authenticated, authentication.isContentCreator,
 
 router.post('/getnews', logger.newsLogger, newsController.getNews);
 
