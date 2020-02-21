@@ -121,7 +121,7 @@ module.exports.uploadPic = (req, res) => {
     var picUrls = [];
     if (req.files.length < 1) {
         return res.status(400).json({
-            message: "you didnt send filed - empty"
+            message: "you didnt send files - empty"
         })
     }
     else {
