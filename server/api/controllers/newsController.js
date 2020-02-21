@@ -12,7 +12,11 @@ module.exports.addNews = (req, res) => {
     var pictureArray;
     fs.writeFile(`${path.join(__dirname + `./../../../files/txt/${req.body.title}.txt`)}`,
         req.body.text, function (err) {
-            if (err) throw err;
+            if (err) {
+                return res.status(500).json({
+                    err
+                })
+            }
             // Pictures.find({ newsTitle: req.body.title }).then(findedPictures => {
             // console.log(findedPictures[0].pictureFile)
             new News({
@@ -20,8 +24,8 @@ module.exports.addNews = (req, res) => {
                 title: req.body.title,
                 textFile: `${config.get('app.webServer.baseUrl')}/files/txt/${req.body.title}.txt`,
                 // pictureFile: picUrls
-                // pictureFile: req.body.picUrls
-                pictures: req.body.pictures
+                pictureFile: req.body.picUrls
+                //pictures: req.body.pictures
             }).save().then(news => {
                 return res.status(200).json({
                     message: "news added",
@@ -59,7 +63,11 @@ module.exports.removeNews = (req, res) => {
 module.exports.getNews = (req, res) => {
 
     fs.readFile(`${path.join(__dirname + `./../../../files/txt/${req.body.title}.txt`)}`, 'utf8', function (err, data) {
-        if (err) throw err;
+        if (err) {
+            return res.status(500).json({
+                err
+            })
+        }
 
         News.find({ $or: [{ title: req.body.title }, { _id: req.body.newsId }] }).then((news) => {
 
@@ -147,3 +155,55 @@ module.exports.uploadPic = (req, res) => {
         })
     }
 }
+module.exports.getAllNews = (req, res) => {
+    News.find({}).sort('-date').then(news => {
+        return res.status(200).json({
+            news
+        })
+    }).catch(err => {
+        return res.status(500).json({
+            err
+        })
+    })
+}
+// module.exports.updateNews = (req, res) => {
+
+//     News.find({ _id: req.body.newsId }).then((news) => {
+
+//         if (news.length < 1) {
+//             return res.status(400).json({
+//                 message: "news does not exist"
+//             })
+//         }
+//         else {
+
+//             fs.unlink(`${path.join(__dirname + `./../../../files/txt/${news[0].title}.txt`), function (err) {
+//                 if (err) throw err;
+//                 // if no error, file has been deleted successfully
+//                 console.log('File deleted!');
+//             });
+
+
+//             fs.writeFile(`${path.join(__dirname + `./../../../files/txt/${req.body.title}.txt`)}`,
+//                 req.body.text, function (err) {
+//                     if (err) throw err;
+//                     news[0].title = req.body.title;
+//                     news[0].pictures = req.body.picUrls;
+//                     news[0].textFile = `${config.get('app.webServer.baseUrl')}/files/txt/${req.body.title}.txt`;
+
+//                     return res.status(200).json({
+//                         message: "successful",
+//                         news: news[0],
+//                         text: data
+//                     })
+
+//                 });
+
+//         }
+//     }).catch(err => {
+//         return res.status(500).json({ message: "finding news failed - internal", err })
+//     })
+
+
+
+// }
