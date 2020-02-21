@@ -119,27 +119,31 @@ module.exports.searchNews = (req, res) => {
 
 module.exports.uploadPic = (req, res) => {
     var picUrls = [];
-    req.files.forEach(pic => {
-        picUrls.push(`${config.get('app.webServer.baseUrl')}/files/image/${pic.filename}`)
-    });
-    console.log("000000000000000000------------------");
-
-    console.log(req);
-
-    console.log("23333333333333333330000000000------------------");
-    new Pictures({
-        _id: mongoose.Types.ObjectId(),
-        // newsTitle: req.body.title,
-        pictureFile: picUrls
-    }).save().then(pictures => {
-        return res.status(200).json({
-            message: "upload succesful",
-            pictures
+    if (req.files.length < 1) {
+        return res.status(400).json({
+            message: "you didnt send filed - empty"
         })
-    }).catch(err => {
-        return res.status(500).json({
-            message: "saving failed",
-            err
+    }
+    else {
+
+        req.files.forEach(pic => {
+            picUrls.push(`${config.get('app.webServer.baseUrl')}/files/image/${pic.filename}`)
+        });
+
+        new Pictures({
+            _id: mongoose.Types.ObjectId(),
+            // newsTitle: req.body.title,
+            pictureFile: picUrls
+        }).save().then(pictures => {
+            return res.status(200).json({
+                message: "upload succesful",
+                pictures
+            })
+        }).catch(err => {
+            return res.status(500).json({
+                message: "saving failed",
+                err
+            })
         })
-    })
+    }
 }
