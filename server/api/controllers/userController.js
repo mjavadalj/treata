@@ -479,26 +479,55 @@ module.exports.signupWithSms = (req, res) => {
     رمز عبو شما:\n
     ${disposablePassword}
 `
-    new User({
-        _id: mongoose.Types.ObjectId(),
-        phoneNumber: req.body.phoneNumber,
-        status: 'notVerfied'
-    }).save().then(userAdded => {
-        mailer.phoneVerfication(req.body.phoneNumber, sendingText)
-        userAdded.disposablePassword = disposablePassword;
-        userAdded.save().then(user => {
+    User.find({ phoneNumber: req.body.phoneNumber }).then(usersFinded => {
+        if (usersFinded.length < 1) {
+            new User({
+                _id: mongoose.Types.ObjectId(),
+                phoneNumber: req.body.phoneNumber,
+                status: 'notVerfied'
+            }).save().then(userAdded => {
+                mailer.phoneVerfication(req.body.phoneNumber, sendingText)
+                userAdded.disposablePassword = disposablePassword;
+                userAdded.save().then(user => {
 
-            return res.status(200).json({
-                message: "confirmation code sent",
-                user
-            })
+                    return res.status(200).json({
+                        message: "confirmation code sent",
+                        user
+                    })
 
-        }).catch(err => {
-            return res.status(500).json({
-                message: "saving changed failed",
-                err
+                }).catch(err => {
+                    return res.status(500).json({
+                        message: "saving changed failed",
+                        err
+                    })
+                })
+
+
+
+
+            }).catch(err => {
+                return res.status(500).json({
+                    message: "internal error",
+                    err
+                })
             })
-        })
+        }
+        else {
+            mailer.phoneVerfication(usersFinded[0].phoneNumber, sendingText)
+            usersFinded[0].disposablePassword = disposablePassword;
+            usersFinded[0].save().then(addedUser => {
+                return res.status(200).json({
+                    message: "confirmation code sent",
+                    user: addedUser
+                })
+
+            }).catch(err => {
+                return res.status(500).json({
+                    message: "saving failed - internal",
+                    err
+                })
+            });
+        }
 
 
 
