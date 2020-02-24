@@ -20,6 +20,12 @@ const news = new Schema({
     likes: {
         type: Number,
         default: 0
+    },
+    color: {
+        type: String
+    },
+    date: {
+        type: Date
     }
 })
 module.exports = mongoose.model('News', news)
