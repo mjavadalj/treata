@@ -296,8 +296,8 @@ module.exports.likeNews = (req, res) => {
             news[0].likes = news[0].likes + 1;
             news[0].save().then(newNews => {
 
-                User.find({ _id: req.user._id }).then(users => {
-                    // User.find({ _id: req.body.userId }).then(users => {
+                // User.find({ _id: req.user._id }).then(users => {
+                User.find({ _id: req.body.userId }).then(users => {
 
                     if (!users[0].likedNews.includes(`${newNews._id}`)) {
 
@@ -340,8 +340,8 @@ module.exports.likeNews = (req, res) => {
 }
 module.exports.unlikeNews = (req, res) => {
 
-    User.find({ _id: req.user._id }).then(users => {
-        // User.find({ _id: req.body.userId }).then(users => {
+    // User.find({ _id: req.user._id }).then(users => {
+    User.find({ _id: req.body.userId }).then(users => {
 
         News.find({ $or: [{ title: req.body.title }, { _id: req.body.newsId }] }).then(news => {
             if (users[0].likedNews.includes(`${news[0]._id}`)) {
@@ -384,9 +384,9 @@ module.exports.unlikeNews = (req, res) => {
 
 
 module.exports.saveNews = (req, res) => {
-    User.find({ _id: req.user._id }).then(users => {
+    // User.find({ _id: req.user._id }).then(users => {
 
-        // User.find({ _id: req.body.userId }).then(users => {
+    User.find({ _id: req.body.userId }).then(users => {
         News.find({ $or: [{ title: req.body.title }, { _id: req.body.newsId }] }).then(news => {
             if (!users[0].savedNews.includes(`${news[0]._id}`)) {
 
