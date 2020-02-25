@@ -207,15 +207,22 @@ module.exports.updateNews = (req, res) => {
             })
         }
         else {
-            news[0].title = req.body.title;
-            news[0].pictures = req.body.picUrls;
-            news[0].text = req.body.text;
-            news[0].color = req.body.color;
-            news[0].summary = req.body.summary;
+            if (req.body.title) { news[0].title = req.body.title; }
+            if (req.body.text) { news[0].text = req.body.text; }
+            if (req.body.picUrls) { news[0].pictures = req.body.picUrls; }
+            if (req.body.summary) { news[0].summary = req.body.summary; }
+            if (req.body.color) { news[0].color = req.body.color; }
 
-            return res.status(200).json({
-                message: "successful",
-                news: news[0],
+            news[0].save().then(newNews => {
+
+                return res.status(200).json({
+                    message: "successful",
+                    newNews
+                })
+            }).catch(err => {
+                return res.status(500).json({
+                    err
+                })
             })
         }
     }).catch(err => {
