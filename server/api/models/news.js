@@ -13,14 +13,13 @@ const news = new Schema({
         required: true,
         unique: true
     },
-    textFile: {
-        type: String
-    },
     pictures: [String],
     likes: {
         type: Number,
         default: 0
     },
+    text: String,
+    summary: String,
     color: {
         type: String
     },
