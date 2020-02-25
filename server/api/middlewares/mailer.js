@@ -3,7 +3,6 @@ const nodemailer = require('nodemailer');
 
 const config = require('config');
 const Kavenegar = require('kavenegar');
-
 module.exports.emailVerification = async (email, subject, sendingText) => {
 
     let transporter = nodemailer.createTransport({
@@ -47,3 +46,4 @@ module.exports.phoneVerfication = (phoneNumber, sendingText) => {
 
     );
 }
+

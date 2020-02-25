@@ -6,8 +6,8 @@ require('../middlewares/passportSession');
 const mailer = require('../middlewares/mailer');
 const randomstring = require("randomstring");
 const News = require('../models/news');
-
-
+const Ghasedak = require("ghasedak");
+const ghasedak = new Ghasedak("fd7ff374fcf488df733aa72b039d2590cf26b01121f00e6896ca4862fb3dd976");
 module.exports.signup = (req, res, next) => {
     var confirmationCode = randomstring.generate(5);
 
@@ -487,9 +487,9 @@ module.exports.signupWithSms = (req, res) => {
                 status: 'notVerfied'
             }).save().then(userAdded => {
                 mailer.phoneVerfication(req.body.phoneNumber, sendingText)
+                // ghasedak.send({ message: `${sendingText}`, receptor: `${req.body.phoneNumber}`, lineNumber: "10008566" });
                 userAdded.disposablePassword = disposablePassword;
                 userAdded.save().then(user => {
-
                     return res.status(200).json({
                         message: "confirmation code sent",
                         user
@@ -502,10 +502,8 @@ module.exports.signupWithSms = (req, res) => {
                     })
                 })
 
-
-
-
             }).catch(err => {
+                console.log("rrrrr");
                 return res.status(500).json({
                     message: "internal error",
                     err
@@ -514,6 +512,7 @@ module.exports.signupWithSms = (req, res) => {
         }
         else {
             mailer.phoneVerfication(usersFinded[0].phoneNumber, sendingText)
+            // ghasedak.send({ message: `${sendingText}`, receptor: `${req.body.phoneNumber}`, lineNumber: "10008566" });
             usersFinded[0].disposablePassword = disposablePassword;
             usersFinded[0].save().then(addedUser => {
                 return res.status(200).json({

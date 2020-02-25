@@ -31,6 +31,7 @@ module.exports.addNews = (req, res) => {
         title: req.body.title,
         text: req.body.text,
         summary: short,
+        color: req.body.color,
         pictureFile: req.body.picUrls
     }).save().then(news => {
         return res.status(200).json({
