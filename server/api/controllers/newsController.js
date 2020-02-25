@@ -58,10 +58,18 @@ module.exports.addNews = (req, res) => {
     // });
 }
 module.exports.removeNews = (req, res) => {
-    News.deleteOne({ $or: [{ title: req.body.title }, { _id: req.body.newsId }] }).then(() => {
-        return res.status(200).json({
-            message: "news deleted"
-        })
+    News.deleteOne({ $or: [{ title: req.body.title }, { _id: req.body.newsId }] }).then((news) => {
+        if (news.deletedCount == 0) {
+
+            return res.status(200).json({
+                message: "nothing deleted"
+            })
+        } else {
+
+            return res.status(200).json({
+                message: "news deleted"
+            })
+        }
     }).catch(err => {
         return res.status(500).json({ message: "deleting failed - internal", err })
     })
@@ -189,44 +197,29 @@ module.exports.getAllNews = (req, res) => {
         })
     })
 }
-// module.exports.updateNews = (req, res) => {
+module.exports.updateNews = (req, res) => {
 
-//     News.find({ _id: req.body.newsId }).then((news) => {
+    News.find({ _id: req.body.newsId }).then((news) => {
 
-//         if (news.length < 1) {
-//             return res.status(400).json({
-//                 message: "news does not exist"
-//             })
-//         }
-//         else {
+        if (news.length < 1) {
+            return res.status(400).json({
+                message: "news does not exist"
+            })
+        }
+        else {
+            news[0].title = req.body.title;
+            news[0].pictures = req.body.picUrls;
+            news[0].text = req.body.text;
+            news[0].color = req.body.color;
+            news[0].summary = req.body.summary;
 
-//             fs.unlink(`${path.join(__dirname + `./../../../files/txt/${news[0].title}.txt`), function (err) {
-//                 if (err) throw err;
-//                 // if no error, file has been deleted successfully
-//                 console.log('File deleted!');
-//             });
+            return res.status(200).json({
+                message: "successful",
+                news: news[0],
+            })
+        }
+    }).catch(err => {
+        return res.status(500).json({ message: "finding news failed - internal", err })
+    })
 
-
-//             fs.writeFile(`${path.join(__dirname + `./../../../files/txt/${req.body.title}.txt`)}`,
-//                 req.body.text, function (err) {
-//                     if (err) throw err;
-//                     news[0].title = req.body.title;
-//                     news[0].pictures = req.body.picUrls;
-//                     news[0].textFile = `${config.get('app.webServer.baseUrl')}/files/txt/${req.body.title}.txt`;
-
-//                     return res.status(200).json({
-//                         message: "successful",
-//                         news: news[0],
-//                         text: data
-//                     })
-
-//                 });
-
-//         }
-//     }).catch(err => {
-//         return res.status(500).json({ message: "finding news failed - internal", err })
-//     })
-
-
-
-// }
+}
