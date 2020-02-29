@@ -7,9 +7,12 @@ const teee = require('../middlewares/Trez');
 const TrezSmsClient = require("trez-sms-client");
 const client = new teee("mjavadalj", "0123456789")
 router.post('/sms', logger.userLogger, (req, res) => {
-    client.manualSendCode("9109104364", "Verification Code: 595783 \nTrez WebService SMS")
+    client.manualSendCode("09379387278", "Verification Code: 595783 \nTrez WebService SMS")
         .then((messageId) => {
             console.log("Sent Message ID: " + messageId);
+            return res.status(200).json({
+                message: "ok"
+            })
         })
         .catch(error => console.log(error))
 });
