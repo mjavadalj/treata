@@ -39,7 +39,10 @@ const user = new Schema({
     },
     cart: { type: objectId, ref: 'Cart' },
     likedNews: [{ type: objectId, ref: "News" }],
-    savedNews: [{ type: objectId, ref: "News" }]
+    savedNews: [{
+        type: objectId, ref: "saveNews"
+    }
+    ]
 
 });
 

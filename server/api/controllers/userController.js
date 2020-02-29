@@ -6,6 +6,7 @@ require('../middlewares/passportSession');
 const mailer = require('../middlewares/mailer');
 const randomstring = require("randomstring");
 const News = require('../models/news');
+const SaveNews = require('../models//saveNews');
 const Ghasedak = require("ghasedak");
 const ghasedak = new Ghasedak("fd7ff374fcf488df733aa72b039d2590cf26b01121f00e6896ca4862fb3dd976");
 module.exports.signup = (req, res, next) => {
@@ -305,7 +306,8 @@ module.exports.likeNews = (req, res) => {
                         users[0].save().then(user => {
                             return res.status(200).json({
                                 message: "news liked",
-                                newNews
+                                newNews,
+                                user
                             })
                         }).catch(err => {
                             return res.status(500).json({
@@ -381,91 +383,73 @@ module.exports.unlikeNews = (req, res) => {
     })
 }
 
-
-
-module.exports.saveNews = (req, res) => {
-    // User.find({ _id: req.user._id }).then(users => {
-
-    User.find({ _id: req.body.userId }).then(users => {
-        News.find({ $or: [{ title: req.body.title }, { _id: req.body.newsId }] }).then(news => {
-            if (!users[0].savedNews.includes(`${news[0]._id}`)) {
-
-
-                users[0].savedNews = news[0]._id;
-                users[0].save().then(user => {
-                    return res.status(200).json({
-                        message: "news saved successfully",
-                        user
-                    })
-                }).catch(err => {
-                    return res.status(500).json({
-                        message: "saving info failed",
-                        err
-                    })
-                })
-            }
-            else {
-                return res.status(400).json({
-                    message: "you already saved this news"
-                })
-            }
-
-
-        }).catch(err => {
-            return res.status(500).json({
-                message: "finding news failed",
-                err
-            })
+module.exports.addPooshe = (req, res) => {
+    new SaveNews({
+        _id: mongoose.Types.ObjectId(),
+        title: req.body.poosheTitle,
+        userId: req.body.userId
+    }).save().then(pooshe => {
+        return res.status(200).json({
+            message: "creating pooshe successful",
+            pooshe
         })
     }).catch(err => {
         return res.status(500).json({
-            message: "finding user failed",
+            message: "adding pooshe failed",
             err
         })
     })
 }
 
-
-
-module.exports.unSaveNews = (req, res) => {
+module.exports.saveNews = (req, res) => {
     // User.find({ _id: req.user._id }).then(users => {
     User.find({ _id: req.body.userId }).then(users => {
-        News.find({ $or: [{ title: req.body.title }, { _id: req.body.newsId }] }).then(news => {
-            if (users[0].savedNews.includes(`${news[0]._id}`)) {
-                users[0].savedNews.splice(users[0].savedNews.indexOf(`${news[0]._id}`), 1);
-
-                users[0].savedNews = news[0]._id;
-                users[0].save().then(user => {
-                    return res.status(200).json({
-                        message: "news saved successfully",
-                        user
-                    })
-                }).catch(err => {
-                    return res.status(500).json({
-                        message: "saving info failed",
-                        err
-                    })
-                })
-            }
-            else {
-                return res.status(400).json({
-                    message: "you never saved this news"
-                })
-            }
-
-
-        }).catch(err => {
-            return res.status(500).json({
-                message: "finding news failed",
-                err
+        if (users.length < 1) {
+            return res.status(400).json({
+                message: "user not found"
             })
-        })
+        }
+        else {
+            SaveNews.find({ _id: req.body.poosheId }).then(pooshe => {
+                if (pooshe.length < 1) {
+                    return res.status(400).json({
+                        message: "pooshe not found"
+                    })
+                }
+                else {
+                    pooshe[0].user = users[0]._id;
+                    pooshe[0].savedNews.push(req.body.newsId);
+                    pooshe[0].save().then(updatedPooshe => {
+                        return res.status(200).json({
+                            message: "saving successful",
+                            pooshe: updatedPooshe
+
+                        })
+                    }).catch(err => {
+                        return res.status(500).json({
+                            message: "saving data failed",
+                            err
+                        })
+                    })
+                }
+            }).catch(err => {
+                return res.status(500).json({
+                    message: "finding pooshe failed",
+                    err
+                })
+            })
+        }
     }).catch(err => {
         return res.status(500).json({
             message: "finding user failed",
             err
         })
-    })
+    });
+
+}
+
+module.exports.unSaveNews = (req, res) => {
+    // User.find({ _id: req.user._id }).then(users => {
 }
 
 
@@ -539,3 +523,68 @@ module.exports.signupWithSms = (req, res) => {
         })
 }
 
+
+
+module.exports.getUserLikes = (req, res) => {
+
+    // find by user id in session
+    User.find({ _id: req.body.userId }).populate('likedNews').then(findedUsers => {
+        return res.status(200).json({
+            user: findedUsers[0]
+        })
+    }).catch(err => {
+        return res.status(500).json({
+
+            message: "finding user failed",
+            err
+        })
+    })
+
+}
+
+module.exports.getUserSaves = (req, res) => {
+
+    // find by user id in session
+    SaveNews.find({ user: req.body.userId }).populate('News').then(findedPooshe => {
+        return res.status(200).json({
+            pooshe: findedPooshe
+        })
+    }).catch(err => {
+        return res.status(500).json({
+            message: "finding pooshe failed",
+            err
+        })
+    })
+
+}
+module.exports.getUserPooshe = (req, res) => {
+
+    // find by user id in session
+    SaveNews.find({ _id: req.body.poosheId }).populate('News').then(findedPooshe => {
+        return res.status(200).json({
+            pooshe: findedPooshe[0]
+        })
+    }).catch(err => {
+        return res.status(500).json({
+            message: "finding pooshe failed",
+            err
+        })
+    })
+
+}
+// module.exports.getUsersaves = (req, res) => {
+
+//     // find by user id in session
+//     User.find({ _id: req.body.userId }).populate('likedNews').then(findedUsers => {
+//         return res.status(200).json({
+//             user: findedUsers[0]
+//         })
+//     }).catch(err => {
+//         return res.status(500).json({
+
+//             message: "finding user failed",
+//             err
+//         })
+//     })
+
+// }

@@ -24,6 +24,10 @@ const news = new Schema({
     },
     date: {
         type: Date
+    },
+    category: {
+        type: String,
+        enum: ['all', 'medical', 'treata', 'alzheimer']
     }
 })
 module.exports = mongoose.model('News', news)

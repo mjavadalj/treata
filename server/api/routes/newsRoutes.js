@@ -7,7 +7,8 @@ const logger = require('../middlewares/logger');
 router.post('/addnews', logger.newsLogger, newsController.addNews);// authentication.authenticated, authentication.isContentCreator,
 
 router.post('/removenews', logger.newsLogger, newsController.removeNews);// authentication.authenticated, authentication.isContentCreator,
-router.post('/uploadpics', logger.newsLogger, upload.array('photos', 3), newsController.uploadPic);// authentication.authenticated, authentication.isContentCreator,
+// router.post('/uploadpics', logger.newsLogger, upload.array('photos', 3), newsController.uploadPic);// authentication.authenticated, authentication.isContentCreator,
+router.post('/uploadpics', logger.newsLogger, upload.single('photos'), newsController.uploadPic);
 router.post('/updatenews', logger.newsLogger, newsController.updateNews);
 router.post('/getnews', logger.newsLogger, newsController.getNews);
 router.get('/news', logger.newsLogger, newsController.getAllNews);

@@ -32,7 +32,8 @@ module.exports.addNews = (req, res) => {
         text: req.body.text,
         summary: req.body.summary,
         color: req.body.color,
-        pictureFile: req.body.picUrls
+        pictureFile: req.body.picUrls,
+        date: new Date()
     }).save().then(news => {
         return res.status(200).json({
             message: "news added",
@@ -156,18 +157,50 @@ module.exports.searchNews = (req, res) => {
 
 }
 
+// module.exports.uploadPic = (req, res) => {
+//     var picUrls = [];
+//     if (req.files.length < 1) {
+//         return res.status(400).json({
+//             message: "you didnt send files - empty"
+//         })
+//     }
+//     else {
+
+//         req.files.forEach(pic => {
+//             picUrls.push(`${config.get('app.webServer.baseUrl')}/files/image/${pic.filename}`)
+//         });
+
+//         new Pictures({
+//             _id: mongoose.Types.ObjectId(),
+//             // newsTitle: req.body.title,
+//             pictureFile: picUrls
+//         }).save().then(pictures => {
+//             return res.status(200).json({
+//                 message: "upload succesful",
+//                 pictures
+//             })
+//         }).catch(err => {
+//             return res.status(500).json({
+//                 message: "saving failed",
+//                 err
+//             })
+//         })
+//     }
+// }
+
 module.exports.uploadPic = (req, res) => {
     var picUrls = [];
-    if (req.files.length < 1) {
+    if (!req.file) {
         return res.status(400).json({
             message: "you didnt send files - empty"
         })
     }
     else {
 
-        req.files.forEach(pic => {
-            picUrls.push(`${config.get('app.webServer.baseUrl')}/files/image/${pic.filename}`)
-        });
+        // req.files.forEach(pic => {
+        //     picUrls.push(`${config.get('app.webServer.baseUrl')}/files/image/${pic.filename}`)
+        // });
+        picUrls.push(`${config.get('app.webServer.baseUrl')}/files/image/${req.file.filename}`);
 
         new Pictures({
             _id: mongoose.Types.ObjectId(),
@@ -186,6 +219,8 @@ module.exports.uploadPic = (req, res) => {
         })
     }
 }
+
+
 module.exports.getAllNews = (req, res) => {
     News.find({}).sort('-date').then(news => {
         return res.status(200).json({
