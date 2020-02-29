@@ -445,6 +445,32 @@ module.exports.saveNews = (req, res) => {
 
 module.exports.unSaveNews = (req, res) => {
     // User.find({ _id: req.user._id }).then(users => {
+    SaveNews.find({ _id: req.body.poosheId }).then(pooshe => {
+        if (pooshe.length < 1) {
+            return res.status(400).json({
+                message: "pooshe not found"
+            })
+        }
+        else {
+            pooshe[0].savedNews.splice(pooshe[0].savedNews.indexOf(`${req.body.newsId}`), 1);
+            pooshe[0].save().then(pooshe => {
+                return res.status(200).json({
+                    message: "successful",
+                    pooshe
+                })
+            }).catch(err => {
+                return res.status(500).json({
+                    message: "updating pooshe failed",
+                    err
+                })
+            })
+        }
+    }).catch(err => {
+        return res.status(500).json({
+            message: "failed",
+            err
+        })
+    })
 }
 
 
@@ -556,9 +582,15 @@ module.exports.getUserPooshe = (req, res) => {
 
     // find by user id in session
     SaveNews.find({ _id: req.body.poosheId }).populate('savedNews').then(findedPooshe => {
-        return res.status(200).json({
-            pooshe: findedPooshe[0]
-        })
+        if (findedPooshe.length < 1) {
+            return res.status(404).json({
+                message: "pooshe not found"
+            })
+        } else {
+            return res.status(200).json({
+                pooshe: findedPooshe[0]
+            })
+        }
     }).catch(err => {
         return res.status(500).json({
             message: "finding pooshe failed",
@@ -594,5 +626,25 @@ module.exports.getAllUser = (req, res) => {
         return res.status(500).json({
             err
         })
+    })
+}
+
+
+module.exports.deletePooshe = (req, res) => {
+
+
+    SaveNews.deleteOne({ _id: req.body.poosheId }).then((savenews) => {
+        if (savenews.deletedCount == 0) {
+
+            return res.status(400).json({
+                message: "nothing deleted"
+            })
+        } else {
+            return res.status(200).json({
+                message: "pooshe deleted"
+            })
+        }
+    }).catch(err => {
+        return res.status(500).json({ message: "deleting failed - internal", err })
     })
 }

@@ -38,6 +38,7 @@ router.post('/addpooshe', logger.userLogger, userController.addPooshe);
 router.post('/getUserLikes', logger.userLogger, userController.getUserLikes);
 router.post('/getUsersaves', logger.userLogger, userController.getUserSaves);
 router.post('/getUserpooshe', logger.userLogger, userController.getUserPooshe);
+router.post('/deletepooshe', logger.userLogger, userController.deletePooshe);
 
 
 
