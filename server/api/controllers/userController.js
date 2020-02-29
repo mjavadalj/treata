@@ -316,7 +316,7 @@ module.exports.likeNews = (req, res) => {
                             })
                         })
                     } else {
-                        return res.status(400).json({
+                        return res.status(200).json({
                             message: "you already like this news"
                         })
                     }
