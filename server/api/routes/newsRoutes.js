@@ -13,5 +13,6 @@ router.post('/updatenews', logger.newsLogger, newsController.updateNews);
 router.post('/getnews', logger.newsLogger, newsController.getNews);
 router.get('/news', logger.newsLogger, newsController.getAllNews);
 
+router.post('/getcatnews', logger.newsLogger, newsController.getCatNews);
 router.post('/searchnews', logger.userLogger, newsController.searchNews);  /*authentication.authenticated, authentication.verfied, */
 module.exports = router;

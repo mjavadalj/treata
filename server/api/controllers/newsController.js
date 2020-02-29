@@ -265,3 +265,24 @@ module.exports.updateNews = (req, res) => {
     })
 
 }
+
+module.exports.getCatNews = (req, res) => {
+    News.find({ category: req.body.newsCategory }).then(news => {
+        if (news.length < 1) {
+            return res.status(404).json({
+                message: "news not found"
+            })
+        }
+        else {
+            return res.status(200).json({
+                message: "successful",
+                news: news[0]
+            })
+        }
+    }).catch(err => {
+        return res.status(500).json({
+            message: "finding failed",
+            err
+        })
+    })
+}
