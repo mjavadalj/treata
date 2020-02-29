@@ -9,8 +9,8 @@ const findInFiles = require('find-in-files');
 
 module.exports.addNews = (req, res) => {
 
-    // var letters = req.body.text.split("", 100);
-    // var short = letters.join("");
+    var letters = req.body.text.split("", 100);
+    var short = letters.join("");
 
 
 
@@ -30,7 +30,7 @@ module.exports.addNews = (req, res) => {
         _id: mongoose.Types.ObjectId(),
         title: req.body.title,
         text: req.body.text,
-        summary: req.body.summary,
+        summary: short,
         color: req.body.color,
         pictureFile: req.body.picUrls,
         date: new Date()
