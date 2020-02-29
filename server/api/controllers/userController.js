@@ -382,7 +382,7 @@ module.exports.addPooshe = (req, res) => {
     new SaveNews({
         _id: mongoose.Types.ObjectId(),
         title: req.body.poosheTitle,
-        userId: req.body.userId
+        user: req.body.userId
     }).save().then(pooshe => {
         return res.status(200).json({
             message: "creating pooshe successful",
