@@ -37,4 +37,7 @@ router.post('/getUsersaves', logger.userLogger, userController.getUserSaves);
 router.post('/getUserpooshe', logger.userLogger, userController.getUserPooshe);
 
 
+
+router.get('/getalluser', logger.userLogger, userController.getAllUser);
+
 module.exports = router;

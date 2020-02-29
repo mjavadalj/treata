@@ -588,3 +588,16 @@ module.exports.getUserPooshe = (req, res) => {
 //     })
 
 // }
+
+
+module.exports.getAllUser = (req, res) => {
+    User.find({}).then(users => {
+        return res.status(200).json({
+            users
+        })
+    }).catch(err => {
+        return res.status(500).json({
+            err
+        })
+    })
+}
