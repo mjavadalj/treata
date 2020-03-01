@@ -33,6 +33,7 @@ module.exports.addNews = (req, res) => {
         summary: short,
         color: req.body.color,
         pictures: req.body.picUrls,
+        category: req.body.category,
         date: new Date()
     }).save().then(news => {
         return res.status(200).json({
