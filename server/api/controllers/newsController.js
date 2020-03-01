@@ -277,7 +277,7 @@ module.exports.getCatNews = (req, res) => {
         else {
             return res.status(200).json({
                 message: "successful",
-                news: news[0]
+                news: news
             })
         }
     }).catch(err => {
