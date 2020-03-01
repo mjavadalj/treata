@@ -32,7 +32,7 @@ module.exports.addNews = (req, res) => {
         text: req.body.text,
         summary: short,
         color: req.body.color,
-        pictureFile: req.body.picUrls,
+        pictures: req.body.picUrls,
         date: new Date()
     }).save().then(news => {
         return res.status(200).json({
