@@ -288,27 +288,35 @@ module.exports.getUser = (req, res) => {
 };
 
 module.exports.likeNews = (req, res) => {
-    News.find({ $or: [{ title: req.body.title }, { _id: req.body.newsId }] }).then(news => {
+
+    //{ _id: req.user._id }
+    News.find({ _id: req.body.newsId }).then(news => {
         if (news.length < 1) {
             return res.status(400).json({
                 message: "news not found"
             })
         } else {
-
-            // User.find({ _id: req.user._id }).then(users => {
             User.find({ _id: req.body.userId }).then(users => {
-
-                if (!users[0].likedNews.includes(`${newNews._id}`)) {
-                    /* 
-                                news[0].likes = news[0].likes + 1;
-                                news[0].save().then().catch()*/
-                    users[0].likedNews.push(newNews._id);
+                if (!users[0].likedNews.includes(`${news[0]._id}`)) {
+                    users[0].likedNews.push(news[0]._id);
                     users[0].save().then(user => {
-                        return res.status(200).json({
-                            message: "news liked",
-                            newNews,
-                            user
+
+                        news[0].likes = news[0].likes + 1;
+                        news[0].save().then(newNews => {
+
+                            return res.status(200).json({
+                                message: "news liked",
+                                newNews,
+                                user
+                            })
+                        }).catch(err => {
+                            return res.status(500).json({
+                                message: "cannot save",
+                                err
+                            })
                         })
+
+
                     }).catch(err => {
                         return res.status(500).json({
                             message: "updatin user failed - internal",
@@ -327,13 +335,52 @@ module.exports.likeNews = (req, res) => {
                 })
             })
 
+
         }
     }).catch(err => {
+
         return res.status(500).json({
             message: "finding the news failed - internal",
             err
         })
     })
+
+    //             if (!users[0].likedNews.includes(`${newNews._id}`)) {
+    //                 /* 
+    //                             news[0].likes = news[0].likes + 1;
+    //                             news[0].save().then().catch()*/
+    //                 users[0].likedNews.push(newNews._id);
+    //                 users[0].save().then(user => {
+    //                     return res.status(200).json({
+    //                         message: "news liked",
+    //                         newNews,
+    //                         user
+    //                     })
+    //                 }).catch(err => {
+    //                     return res.status(500).json({
+    //                         message: "updatin user failed - internal",
+    //                         err
+    //                     })
+    //                 })
+    //             } else {
+    //                 return res.status(200).json({
+    //                     message: "you already like this news"
+    //                 })
+    //             }
+    //         }).catch(err => {
+    //             return res.status(400).json({
+    //                 message: "finding this user failed ",
+    //                 err
+    //             })
+    //         })
+
+    //     }
+    // }).catch(err => {
+    //     return res.status(500).json({
+    //         message: "finding the news failed - internal",
+    //         err
+    //     })
+    // })
 }
 module.exports.unlikeNews = (req, res) => {
 

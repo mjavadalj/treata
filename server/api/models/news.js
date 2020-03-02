@@ -9,8 +9,7 @@ const news = new Schema({
         required: true
     },
     title: {
-        type: String,
-        unique: true
+        type: String
     },
     pictures: [String],
     likes: {
