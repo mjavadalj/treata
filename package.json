@@ -21,7 +21,7 @@
     "body-parser": "^1.19.0",
     "bunyan": "^1.8.12",
     "chai": "^4.2.0",
-    "config": "^3.2.5",
+    "config": "^3.3.8",
     "connect-mongo": "^3.2.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
